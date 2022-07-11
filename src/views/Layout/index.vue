@@ -2,17 +2,17 @@
   <div>
     <router-view></router-view>
     <van-tabbar route>
-      <van-tabbar-item replace to="/home" icon="home-o">
+      <van-tabbar-item replace to="/homepage" icon="home-o">
         首页
         <template #icon>
           <i class="toutiao toutiao-shouye"></i>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item replace to="/video" icon="search"
-        >视频<template #icon> <i class="toutiao toutiao-shipin"></i> </template
+      <van-tabbar-item replace to="/find" icon="search"
+        >找房<template #icon> <i class="toutiao toutiao-sousuo"></i> </template
       ></van-tabbar-item>
-      <van-tabbar-item replace to="/question" icon="search"
-        >问答<template #icon> <i class="toutiao toutiao-wenda"></i> </template
+      <van-tabbar-item replace to="/info" icon="search"
+        >资讯<template #icon> <i class="toutiao toutiao-yuedu"></i> </template
       ></van-tabbar-item>
       <van-tabbar-item replace to="/my" icon="search"
         >我的<template #icon> <i class="toutiao toutiao-wode"></i> </template
@@ -37,9 +37,13 @@ export default {
 
 <style scoped lang='less'>
 .toutiao {
-  font-size: 40px;
+  font-size: 20px;
 }
+
 /deep/.van-tabbar-item__text {
-  font-size: 20px !important;
+  font-size: 10px !important;
+}
+.van-tabbar {
+  z-index: 0;
 }
 </style>

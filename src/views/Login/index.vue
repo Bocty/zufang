@@ -1,101 +1,60 @@
 <template>
   <div>
-    <van-nav-bar title="登录">
-      <van-icon name="cross" slot="left" />
-      <!-- <template v-slot:left>
-        <van-icon name="cross" />
-      </template> -->
-    </van-nav-bar>
-    <van-form @submit="onSubmit" ref="form">
+    <van-nav-bar title="标题" left-arrow @click-left="onClickLeft" />
+    <van-form @submit="onSubmit" class="login">
       <van-field
-        v-model.trim="mobile"
-        name="mobile"
-        placeholder="请输入手机号"
-        :rules="[
-          { required: true, message: '请输入手机号' },
-          {
-            pattern: /^(?:(?:\+|00)86)?1[3-9]\d{9}$/,
-            message: '不符合手机格式',
-          },
-        ]"
-      >
-        <i class="toutiao toutiao-shouji" slot="left-icon"></i>
-      </van-field>
+        v-model="username"
+        name="username"
+        placeholder="请输入账号"
+        :rules="[{ required: true, message: '请填写用户名' }]"
+      />
       <van-field
-        v-model.trim="code"
+        v-model="password"
         type="password"
-        name="code"
-        placeholder="请输入验证码"
-        :rules="[
-          { required: true, message: '请填写验证码' },
-          { pattern: /^\d{6}$/, message: '验证码必须是6位' },
-        ]"
-      >
-        <i class="toutiao toutiao-yanzhengma" slot="left-icon"></i>
-        <template #button>
-          <van-count-down
-            :time="time"
-            format="ss s"
-            @finish="isCountDownShow = false"
-            v-if="isCountDownShow"
-          />
-          <van-button
-            @click="onSendSms"
-            class="yzm"
-            size="small"
-            native-type="button"
-            v-else
-            >发送验证码</van-button
-          >
-        </template>
-      </van-field>
+        name="password"
+        placeholder="请输入密码"
+        :rules="[{ required: true, message: '请填写密码' }]"
+      />
       <div style="margin: 16px">
-        <van-button round block native-type="submit" class="login-btn"
+        <van-button round block type="info" native-type="submit"
           >登录</van-button
         >
       </div>
+      <p class="zhuce">还没有账号，去注册~</p>
     </van-form>
   </div>
 </template>
 
 <script>
-import { getSmsCode, login } from '@/api/user'
+import { Login } from '@/api/user'
+import { Toast } from 'vant'
 export default {
+  name: 'Login',
   created () { },
   data () {
     return {
-      mobile: '15277582585',
-      code: '246810',
-      time: 5 * 1000,
-      isCountDownShow: false
+      username: 'bocty1',
+      password: '330681qwer',
+      time: 5 * 1000
     }
   },
   methods: {
+    onClickLeft () {
+      Toast('返回')
+    },
     async onSubmit (values) {
       try {
-        const res = await login(values)
+        const res = await Login(values)
         console.log(res)
-        this.$store.commit('setUser', res.data.data
-        )
-      } catch (err) {
-        console.log(err)
-      }
-    },
-    async onSendSms () {
-      try {
-        await this.$refs.form.validate('mobile')
-        this.isCountDownShow = true
-        try {
-          await getSmsCode(this.mobile)
-          console.log('发送成功')
-        } catch (err) {
-          console.log(err)
-          this.$totast.fail('发送失败，请重试')
+        console.log(res.data.status)
+        if (res.data.status === 200) {
+          this.$store.commit('setUser', res.data.body)
+          this.$router.push({ name: 'my' })
+        } else {
+          Toast.fail('账号或密码错误')
         }
       } catch (err) {
         console.log(err)
-        console.log('校验失败')
-        this.$toast.fail('提示内容')
       }
     }
   },
@@ -106,36 +65,10 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
-.toutiao {
-  font-size: 37px;
-}
-.yzm {
-  width: 152px;
-  height: 46px;
-  background-color: #ededed;
-  border-radius: 23px;
-  font-size: 22px;
+<style scoped lang='less'>
+.zhuce {
   color: #666;
-  line-height: 56px;
-  .van-button__text {
-    zoom: 0.96;
-  }
-}
-.login-btn {
-  width: 694px;
-  height: 88px;
-  background-color: #6db4fb;
-  border-radius: 10px;
-  font-size: 30px;
-  color: #ffffff;
-}
-.van-count-down {
-  position: fixed;
-  right: 18px;
-}
-.yzm {
-  position: fixed;
-  right: 10px;
+  font-size: 14px;
+  text-align: center;
 }
 </style>

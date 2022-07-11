@@ -8,8 +8,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    users: {
-
+    user: '',
+    baseurl: 'http://liufusong.top:8080',
+    housetype: {
+      value: 'AREA|88cff55c-aaa4-e2e0'
     }
   },
   getters: {
@@ -17,6 +19,9 @@ export default new Vuex.Store({
   mutations: {
     setUser (state, payload) {
       state.user = payload
+    },
+    housetype (state, payload) {
+      state.housetype = payload
     }
   },
   actions: {
